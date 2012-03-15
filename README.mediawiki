@@ -11,8 +11,9 @@ A small template for making treasure hunts!
 A treasure hunt of this style goes like this:
 # The user finds a clue somewhere in the real world, with a link.
 # The link takes them to the first html page of the hunt, that has a riddle on it!
-#* They solve the riddle, type in the answer, and get a clue for an object in the real world
+# They solve the riddle, type in the answer, and get a clue for an object in the real world
 # They go looking for the next real-world item, which comes with another link...
+
 
 A decent collection of error messages is included for wrong answers.
 
@@ -22,6 +23,12 @@ A single html page (with inline javascript) that allows the user to convert a po
 
 == wordmaker trigram ==
 
-This utility generates random nonsensical words based on a large input file.
+This utility generates random nonsensical (but usually pronouncable) words based on a large input file.
 
 Project Gutenberg provides excellent source material.
+
+Here is an example of the output:
+
+The sed Lad light saim was face sent downed of Tuld hady like o's a the mong th.  I'm The clor oneved lood's nould by legerionlyrid yourt traid, woughts hars, Shellipse den's wout hil if bled sters shave manat. 
+  Whathe wind a she cren. Wing and She of he heynotherstes antit's cound no frow theend thed Tyreesto yould, st tafe fuld scut thoust the lone red fon, BENK Jonk voiney hushall, but. 
+  Ayes. Hot gir ber thave a fuld thel s to ther, a brogn. Sep th thitterset. dow Skingers.  Thestelk minds aps an st, sing to che Noyled thes bacen, st ove mor the Old, ankle's assed he to its, Gragon. Out rat. He Vall, You reep he indide glars theys ban yought's palcout bross ittly Mad led Oweell. Jong and ton had waso ser ing loong?
