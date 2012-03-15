@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>Treasure Hunt $Number$. $Title$</title>
+    <!-- 
+	Kristi, if you're reading this then you're probably a naughty cheater! 
+	No respect!
+	Anyway, reading the code below won't help you find the clue... 
+	the answer has been encoded with a one-time pad! 
+	-->
+    <!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
+    -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+		var encodedClue = encode("$Clue$", "$Answer$")"; 
+		var encodedClueChecksum = "";
+		var resultLinkAnchor = "%s";
+	</script>
+    <script type="text/javascript" src="./treasurehunt.js">
+    </script>
+	<style type="text/css">
+		* { 
+			margin:auto;
+			text-align: center;
+			font-size: 1em;
+		}		
+		h1, h2 { 
+			font-family: arial, sans-serif;
+			color: #004; 			
+		}
+		h1 { 
+			font-size: 1.8em;			
+			margin-bottom: 1em;
+			border-bottom: 1px solid grey;
+			padding: 0.5em;
+		}
+		h2 { font-size: 1.5em; }
+		p {
+			font-size: 1.3em;
+		}
+		#content, body { 
+			width:400px; 
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}		
+		body {
+			padding-left: 50px;
+			padding-right: 50px;			
+			box-shadow: 0px 0px 10px grey;
+		}
+		#question, #wrongdiv,  #resultdiv {
+			margin-top: 1em;			
+			margin-bottom: 1em;
+			padding: 10px;
+		}
+		#answerbox { 
+			margin-top: 1em; 
+			margin-bottom: 1em; 
+			font-size: 1em;	
+			width: auto;
+		}
+		#question { 
+			padding-top: 20%; 
+			padding-bottom: 10%; 
+		}
+		
+	</style>
+  </head>
+  <body>
+    <div name="content" id="content">
+      <div name="question" id="question">
+        <h1>$Title$</h1>
+        $Riddle$
+        <form name="answerForm" id="answerForm">
+          <input type="search" name="answerbox" id="answerbox" placeholder="type your answer here"></input>
+        </form>
+      </div>
+      <div id="wrongdiv" style="display:none">
+        <h2>Wrong.</h2>
+        <p id="wrongtext"></p>
+      </div>
+      <div id="resultdiv" style="display:none">
+        <h2>Well done!</h2>
+        <p name="resultlink" id="resultlink"></p>
+      </div>
+    </div>
+  </body>
+</html>
