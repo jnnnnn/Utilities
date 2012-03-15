@@ -1,154 +1,41 @@
-<html>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>
-arbitrary base conversion
-</title>
+<meta name="generator" content="HTML Tidy for Linux (vers 6 November 2007), see www.w3.org" />
+<title>arbitrary base conversion</title>
+
+<style type="text/css">
+/*<![CDATA[*/
+ div.c5 {margin:auto}
+ form.c4 {margin:auto}
+ button.c3 {width:100%}
+ span.c2 {font-size:80%}
+ span.c1 {font-size:200%}
+/*]]>*/
+</style>
 </head>
-<script>
-//+ Jonas Raoni Soares Silva
-//@ http://jsfromhell.com/classes/bignumber [rev. #4]
+<body>
+<script type="text/javascript">
+//<![CDATA[
+/*
+        JavaScript BigInteger library version 0.9
+        http://silentmatt.com/biginteger/
+        https://github.com/jtobey/javascript-bignum/
 
-BigNumber = function(n, p, r){
-    var o = this, i;
-    if(n instanceof BigNumber){
-        for(i in {precision: 0, roundType: 0, _s: 0, _f: 0}) o[i] = n[i];
-        o._d = n._d.slice();
-        return;
-    }
-    o.precision = isNaN(p = Math.abs(p)) ? BigNumber.defaultPrecision : p;
-    o.roundType = isNaN(r = Math.abs(r)) ? BigNumber.defaultRoundType : r;
-    o._s = (n += "").charAt(0) == "-";
-    o._f = ((n = n.replace(/[^\d.]/g, "").split(".", 2))[0] = n[0].replace(/^0+/, "") || "0").length;
-    for(i = (n = o._d = (n.join("") || "0").split("")).length; i; n[--i] = +n[i]);
-    o.round();
-};
-with({$: BigNumber, o: BigNumber.prototype}){
-    $.ROUND_HALF_EVEN = ($.ROUND_HALF_DOWN = ($.ROUND_HALF_UP = ($.ROUND_FLOOR = ($.ROUND_CEIL = ($.ROUND_DOWN = ($.ROUND_UP = 0) + 1) + 1) + 1) + 1) + 1) + 1;
-    $.defaultPrecision = 40;
-    $.defaultRoundType = $.ROUND_HALF_UP;
-    o.add = function(n){
-        if(this._s != (n = new BigNumber(n))._s)
-            return n._s ^= 1, this.subtract(n);
-        var o = new BigNumber(this), a = o._d, b = n._d, la = o._f,
-        lb = n._f, n = Math.max(la, lb), i, r;
-        la != lb && ((lb = la - lb) > 0 ? o._zeroes(b, lb, 1) : o._zeroes(a, -lb, 1));
-        i = (la = a.length) == (lb = b.length) ? a.length : ((lb = la - lb) > 0 ? o._zeroes(b, lb) : o._zeroes(a, -lb)).length;
-        for(r = 0; i; r = (a[--i] = a[i] + b[i] + r) / 10 >>> 0, a[i] %= 10);
-        return r && ++n && a.unshift(r), o._f = n, o.round();
-    };
-    o.subtract = function(n){
-        if(this._s != (n = new BigNumber(n))._s)
-            return n._s ^= 1, this.add(n);
-        var o = new BigNumber(this), c = o.abs().compare(n.abs()) + 1, a = c ? o : n, b = c ? n : o, la = a._f, lb = b._f, d = la, i, j;
-        a = a._d, b = b._d, la != lb && ((lb = la - lb) > 0 ? o._zeroes(b, lb, 1) : o._zeroes(a, -lb, 1));
-        for(i = (la = a.length) == (lb = b.length) ? a.length : ((lb = la - lb) > 0 ? o._zeroes(b, lb) : o._zeroes(a, -lb)).length; i;){
-            if(a[--i] < b[i]){
-                for(j = i; j && !a[--j]; a[j] = 9);
-                --a[j], a[i] += 10;
-            }
-            b[i] = a[i] - b[i];
-        }
-        return c || (o._s ^= 1), o._f = d, o._d = b, o.round();
-    };
-    o.multiply = function(n){
-        var o = new BigNumber(this), r = o._d.length >= (n = new BigNumber(n))._d.length, a = (r ? o : n)._d,
-        b = (r ? n : o)._d, la = a.length, lb = b.length, x = new BigNumber, i, j, s;
-        for(i = lb; i; r && s.unshift(r), x.set(x.add(new BigNumber(s.join("")))))
-            for(s = (new Array(lb - --i)).join("0").split(""), r = 0, j = la; j; r += a[--j] * b[i], s.unshift(r % 10), r = (r / 10) >>> 0);
-        return o._s = o._s != n._s, o._f = ((r = la + lb - o._f - n._f) >= (j = (o._d = x._d).length) ? this._zeroes(o._d, r - j + 1, 1).length : j) - r, o.round();
-    };
-    o.divide = function(n){
-        if((n = new BigNumber(n)) == "0")
-            throw new Error("Division by 0");
-        else if(this == "0")
-            return new BigNumber;
-        var o = new BigNumber(this), a = o._d, b = n._d, la = a.length - o._f,
-        lb = b.length - n._f, r = new BigNumber, i = 0, j, s, l, f = 1, c = 0, e = 0;
-        r._s = o._s != n._s, r.precision = Math.max(o.precision, n.precision),
-        r._f = +r._d.pop(), la != lb && o._zeroes(la > lb ? b : a, Math.abs(la - lb));
-        n._f = b.length, b = n, b._s = false, b = b.round();
-        for(n = new BigNumber; a[0] == "0"; a.shift());
-        out:
-        do{
-            for(l = c = 0, n == "0" && (n._d = [], n._f = 0); i < a.length && n.compare(b) == -1; ++i){
-                (l = i + 1 == a.length, (!f && ++c > 1 || (e = l && n == "0" && a[i] == "0")))
-                && (r._f == r._d.length && ++r._f, r._d.push(0));
-                (a[i] == "0" && n == "0") || (n._d.push(a[i]), ++n._f);
-                if(e)
-                    break out;
-                if((l && n.compare(b) == -1 && (r._f == r._d.length && ++r._f, 1)) || (l = 0))
-                    while(r._d.push(0), n._d.push(0), ++n._f, n.compare(b) == -1);
-            }
-            if(f = 0, n.compare(b) == -1 && !(l = 0))
-                while(l ? r._d.push(0) : l = 1, n._d.push(0), ++n._f, n.compare(b) == -1);
-            for(s = new BigNumber, j = 0; n.compare(y = s.add(b)) + 1 && ++j; s.set(y));
-            n.set(n.subtract(s)), !l && r._f == r._d.length && ++r._f, r._d.push(j);
-        }
-        while((i < a.length || n != "0") && (r._d.length - r._f) <= r.precision);
-        return r.round();
-    };
-    o.mod = function(n){
-        return this.subtract(this.divide(n).intPart().multiply(n));
-    };
-    o.pow = function(n){
-        var o = new BigNumber(this), i;
-        if((n = (new BigNumber(n)).intPart()) == 0) return o.set(1);
-        for(i = Math.abs(n); --i; o.set(o.multiply(this)));
-        return n < 0 ? o.set((new BigNumber(1)).divide(o)) : o;
-    };
-    o.set = function(n){
-        return this.constructor(n), this;
-    };
-    o.compare = function(n){
-        var a = this, la = this._f, b = new BigNumber(n), lb = b._f, r = [-1, 1], i, l;
-        if(a._s != b._s)
-            return a._s ? -1 : 1;
-        if(la != lb)
-            return r[(la > lb) ^ a._s];
-        for(la = (a = a._d).length, lb = (b = b._d).length, i = -1, l = Math.min(la, lb); ++i < l;)
-            if(a[i] != b[i])
-                return r[(a[i] > b[i]) ^ a._s];
-        return la != lb ? r[(la > lb) ^ a._s] : 0;
-    };
-    o.negate = function(){
-        var n = new BigNumber(this); return n._s ^= 1, n;
-    };
-    o.abs = function(){
-        var n = new BigNumber(this); return n._s = 0, n;
-    };
-    o.intPart = function(){
-        return new BigNumber((this._s ? "-" : "") + (this._d.slice(0, this._f).join("") || "0"));
-    };
-    o.valueOf = o.toString = function(){
-        var o = this;
-        return (o._s ? "-" : "") + (o._d.slice(0, o._f).join("") || "0") + (o._f != o._d.length ? "." + o._d.slice(o._f).join("") : "");
-    };
-    o._zeroes = function(n, l, t){
-        var s = ["push", "unshift"][t || 0];
-        for(++l; --l;  n[s](0));
-        return n;
-    };
-    o.round = function(){
-        if("_rounding" in this) return this;
-        var $ = BigNumber, r = this.roundType, b = this._d, d, p, n, x;
-        for(this._rounding = true; this._f > 1 && !b[0]; --this._f, b.shift());
-        for(d = this._f, p = this.precision + d, n = b[p]; b.length > d && !b[b.length -1]; b.pop());
-        x = (this._s ? "-" : "") + (p - d ? "0." + this._zeroes([], p - d - 1).join("") : "") + 1;
-        if(b.length > p){
-            n && (r == $.DOWN ? false : r == $.UP ? true : r == $.CEIL ? !this._s
-            : r == $.FLOOR ? this._s : r == $.HALF_UP ? n >= 5 : r == $.HALF_DOWN ? n > 5
-            : r == $.HALF_EVEN ? n >= 5 && b[p - 1] & 1 : false) && this.add(x);
-            b.splice(p, b.length - p);
-        }
-        return delete this._rounding, this;
-    };
-	o.asInteger = function() {
-		return parseInt(this.toString());
-	}
-}
+        Copyright (c) 2009 Matthew Crumley <email@matthewcrumley.com>
+        Copyright (c) 2010,2011 by John Tobey <John.Tobey@gmail.com>
+        Licensed under the MIT license.
 
-// orion elenzil
-// 20080905
+        Support for arbitrary internal representation base was added by
+        Vitaly Magerya.
+*/
+
+if(!Array.prototype.map){Array.prototype.map=function(fun){var len=this.length>>>0;if(typeof fun!=="function"){throw new TypeError();}var res=new Array(len);var thisp=arguments[1];for(var i=0;i<len;i++){if(i in this){res[i]=fun.call(thisp,this[i],i,this)}}return res}}function BigInteger(n,s){if(!(this instanceof BigInteger)){if(n instanceof BigInteger){return n}else if(typeof n==="undefined"){return BigInteger.ZERO}return BigInteger.parse(n)}n=n||[];while(n.length&&!n[n.length-1]){--n.length}this._d=n;this._s=n.length?(s||1):0}BigInteger.base=10000000;BigInteger.base_log10=7;BigInteger.ZERO=new BigInteger([],0);BigInteger.ONE=new BigInteger([1],1);BigInteger.M_ONE=new BigInteger(BigInteger.ONE._d,-1);BigInteger._0=BigInteger.ZERO;BigInteger._1=BigInteger.ONE;BigInteger.small=[BigInteger.ZERO,BigInteger.ONE,new BigInteger([2],1),new BigInteger([3],1),new BigInteger([4],1),new BigInteger([5],1),new BigInteger([6],1),new BigInteger([7],1),new BigInteger([8],1),new BigInteger([9],1),new BigInteger([10],1),new BigInteger([11],1),new BigInteger([12],1),new BigInteger([13],1),new BigInteger([14],1),new BigInteger([15],1),new BigInteger([16],1),new BigInteger([17],1),new BigInteger([18],1),new BigInteger([19],1),new BigInteger([20],1),new BigInteger([21],1),new BigInteger([22],1),new BigInteger([23],1),new BigInteger([24],1),new BigInteger([25],1),new BigInteger([26],1),new BigInteger([27],1),new BigInteger([28],1),new BigInteger([29],1),new BigInteger([30],1),new BigInteger([31],1),new BigInteger([32],1),new BigInteger([33],1),new BigInteger([34],1),new BigInteger([35],1),new BigInteger([36],1)];BigInteger.digits="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");BigInteger.prototype.toString=function(base){base=+base||10;if(base<2||base>36){throw new Error("illegal radix "+base+".");}if(this._s===0){return"0"}if(base===10){var str=this._s<0?"-":"";str+=this._d[this._d.length-1].toString();for(var i=this._d.length-2;i>=0;i--){var group=this._d[i].toString();while(group.length<BigInteger.base_log10)group='0'+group;str+=group}return str}else{var numerals=BigInteger.digits;base=BigInteger.small[base];var sign=this._s;var n=this.abs();var digits=[];var digit;while(n._s!==0){var divmod=n.divRem(base);n=divmod[0];digit=divmod[1];digits.push(numerals[digit.valueOf()])}return(sign<0?"-":"")+digits.reverse().join("")}};BigInteger.radixRegex=[/^$/,/^$/,/^[01]*$/,/^[012]*$/,/^[0-3]*$/,/^[0-4]*$/,/^[0-5]*$/,/^[0-6]*$/,/^[0-7]*$/,/^[0-8]*$/,/^[0-9]*$/,/^[0-9aA]*$/,/^[0-9abAB]*$/,/^[0-9abcABC]*$/,/^[0-9a-dA-D]*$/,/^[0-9a-eA-E]*$/,/^[0-9a-fA-F]*$/,/^[0-9a-gA-G]*$/,/^[0-9a-hA-H]*$/,/^[0-9a-iA-I]*$/,/^[0-9a-jA-J]*$/,/^[0-9a-kA-K]*$/,/^[0-9a-lA-L]*$/,/^[0-9a-mA-M]*$/,/^[0-9a-nA-N]*$/,/^[0-9a-oA-O]*$/,/^[0-9a-pA-P]*$/,/^[0-9a-qA-Q]*$/,/^[0-9a-rA-R]*$/,/^[0-9a-sA-S]*$/,/^[0-9a-tA-T]*$/,/^[0-9a-uA-U]*$/,/^[0-9a-vA-V]*$/,/^[0-9a-wA-W]*$/,/^[0-9a-xA-X]*$/,/^[0-9a-yA-Y]*$/,/^[0-9a-zA-Z]*$/];BigInteger.parse=function(s,base){function expandExponential(str){str=str.replace(/\s*[*xX]\s*10\s*(\^|\*\*)\s*/,"e");return str.replace(/^([+\-])?(\d+)\.?(\d*)[eE]([+\-]?\d+)$/,function(x,s,n,f,c){c=+c;var l=c<0;var i=n.length+c;x=(l?n:f).length;c=((c=Math.abs(c))>=x?c-x+l:0);var z=(new Array(c+1)).join("0");var r=n+f;return(s||"")+(l?r=z+r:r+=z).substr(0,i+=l?z.length:0)+(i<r.length?"."+r.substr(i):"")})}s=s.toString();if(typeof base==="undefined"||+base===10){s=expandExponential(s)}var parts=/^([+\-]?)(0[xXcCbB])?([0-9A-Za-z]*)(?:\.\d*)?$/.exec(s);if(parts){var sign=parts[1]||"+";var baseSection=parts[2]||"";var digits=parts[3]||"";if(typeof base==="undefined"){if(baseSection==="0x"||baseSection==="0X"){base=16}else if(baseSection==="0c"||baseSection==="0C"){base=8}else if(baseSection==="0b"||baseSection==="0B"){base=2}else{base=10}}else if(base<2||base>36){throw new Error("Illegal radix "+base+".");}base=+base;if(!(BigInteger.radixRegex[base].test(digits))){throw new Error("Bad digit for radix "+base);}digits=digits.replace(/^0+/,"").split("");if(digits.length===0){return BigInteger.ZERO}sign=(sign==="-")?-1:1;if(base==10){var d=[];while(digits.length>=BigInteger.base_log10){d.push(parseInt(digits.splice(-BigInteger.base_log10).join(''),10))}d.push(parseInt(digits.join(''),10));return new BigInteger(d,sign)}if(base===BigInteger.base){return new BigInteger(digits.map(Number).reverse(),sign)}var d=BigInteger.ZERO;base=BigInteger.small[base];var small=BigInteger.small;for(var i=0;i<digits.length;i++){d=d.multiply(base).add(small[parseInt(digits[i],36)])}return new BigInteger(d._d,sign)}else{throw new Error("Invalid BigInteger format: "+s);}};BigInteger.prototype.add=function(n){if(this._s===0){return BigInteger(n)}n=BigInteger(n);if(n._s===0){return this}if(this._s!==n._s){n=n.negate();return this.subtract(n)}var a=this._d;var b=n._d;var al=a.length;var bl=b.length;var sum=new Array(Math.max(al,bl)+1);var size=Math.min(al,bl);var carry=0;var digit;for(var i=0;i<size;i++){digit=a[i]+b[i]+carry;sum[i]=digit%BigInteger.base;carry=(digit/BigInteger.base)|0}if(bl>al){a=b;al=bl}for(i=size;carry&&i<al;i++){digit=a[i]+carry;sum[i]=digit%BigInteger.base;carry=(digit/BigInteger.base)|0}if(carry){sum[i]=carry}for(;i<al;i++){sum[i]=a[i]}return new BigInteger(sum,this._s)};BigInteger.prototype.negate=function(){return new BigInteger(this._d,-this._s)};BigInteger.prototype.abs=function(){return(this._s<0)?this.negate():this};BigInteger.prototype.subtract=function(n){if(this._s===0){return BigInteger(n).negate()}n=BigInteger(n);if(n._s===0){return this}if(this._s!==n._s){n=n.negate();return this.add(n)}var m=this;var t;if(this._s<0){t=m;m=new BigInteger(n._d,1);n=new BigInteger(t._d,1)}var sign=m.compareAbs(n);if(sign===0){return BigInteger.ZERO}else if(sign<0){t=n;n=m;m=t}var a=m._d;var b=n._d;var al=a.length;var bl=b.length;var diff=new Array(al);var borrow=0;var i;var digit;for(i=0;i<bl;i++){digit=a[i]-borrow-b[i];if(digit<0){digit+=BigInteger.base;borrow=1}else{borrow=0}diff[i]=digit}for(i=bl;i<al;i++){digit=a[i]-borrow;if(digit<0){digit+=BigInteger.base}else{diff[i++]=digit;break}diff[i]=digit}for(;i<al;i++){diff[i]=a[i]}return new BigInteger(diff,sign)};(function(){function addOne(n,sign){var a=n._d;var sum=a.slice();var carry=true;var i=0;while(true){var digit=(a[i]||0)+1;sum[i]=digit%BigInteger.base;if(digit<=BigInteger.base-1){break}++i}return new BigInteger(sum,sign)}function subtractOne(n,sign){var a=n._d;var sum=a.slice();var borrow=true;var i=0;while(true){var digit=(a[i]||0)-1;if(digit<0){sum[i]=digit+BigInteger.base}else{sum[i]=digit;break}++i}return new BigInteger(sum,sign)}BigInteger.prototype.next=function(){switch(this._s){case 0:return BigInteger.ONE;case-1:return subtractOne(this,-1);default:return addOne(this,1)}};BigInteger.prototype.prev=function(){switch(this._s){case 0:return BigInteger.M_ONE;case-1:return addOne(this,-1);default:return subtractOne(this,1)}}})();BigInteger.prototype.compareAbs=function(n){if(this===n){return 0}if(!(n instanceof BigInteger)){if(!isFinite(n)){return(isNaN(n)?n:-1)}n=BigInteger(n)}if(this._s===0){return(n._s!==0)?-1:0}if(n._s===0){return 1}var l=this._d.length;var nl=n._d.length;if(l<nl){return-1}else if(l>nl){return 1}var a=this._d;var b=n._d;for(var i=l-1;i>=0;i--){if(a[i]!==b[i]){return a[i]<b[i]?-1:1}}return 0};BigInteger.prototype.compare=function(n){if(this===n){return 0}n=BigInteger(n);if(this._s===0){return-n._s}if(this._s===n._s){var cmp=this.compareAbs(n);return cmp*this._s}else{return this._s}};BigInteger.prototype.isUnit=function(){return this===BigInteger.ONE||this===BigInteger.M_ONE||(this._d.length===1&&this._d[0]===1)};BigInteger.prototype.multiply=function(n){if(this._s===0){return BigInteger.ZERO}n=BigInteger(n);if(n._s===0){return BigInteger.ZERO}if(this.isUnit()){if(this._s<0){return n.negate()}return n}if(n.isUnit()){if(n._s<0){return this.negate()}return this}if(this===n){return this.square()}var r=(this._d.length>=n._d.length);var a=(r?this:n)._d;var b=(r?n:this)._d;var al=a.length;var bl=b.length;var pl=al+bl;var partial=new Array(pl);var i;for(i=0;i<pl;i++){partial[i]=0}for(i=0;i<bl;i++){var carry=0;var bi=b[i];var jlimit=al+i;var digit;for(var j=i;j<jlimit;j++){digit=partial[j]+bi*a[j-i]+carry;carry=(digit/BigInteger.base)|0;partial[j]=(digit%BigInteger.base)|0}if(carry){digit=partial[j]+carry;carry=(digit/BigInteger.base)|0;partial[j]=digit%BigInteger.base}}return new BigInteger(partial,this._s*n._s)};BigInteger.prototype.multiplySingleDigit=function(n){if(n===0||this._s===0){return BigInteger.ZERO}if(n===1){return this}var digit;if(this._d.length===1){digit=this._d[0]*n;if(digit>=BigInteger.base){return new BigInteger([(digit%BigInteger.base)|0,(digit/BigInteger.base)|0],1)}return new BigInteger([digit],1)}if(n===2){return this.add(this)}if(this.isUnit()){return new BigInteger([n],1)}var a=this._d;var al=a.length;var pl=al+1;var partial=new Array(pl);for(var i=0;i<pl;i++){partial[i]=0}var carry=0;for(var j=0;j<al;j++){digit=n*a[j]+carry;carry=(digit/BigInteger.base)|0;partial[j]=(digit%BigInteger.base)|0}if(carry){digit=carry;carry=(digit/BigInteger.base)|0;partial[j]=digit%BigInteger.base}return new BigInteger(partial,1)};BigInteger.prototype.square=function(){if(this._s===0){return BigInteger.ZERO}if(this.isUnit()){return BigInteger.ONE}var digits=this._d;var length=digits.length;var imult1=new Array(length+length+1);var product,carry,k;var i;for(i=0;i<length;i++){k=i*2;product=digits[i]*digits[i];carry=(product/BigInteger.base)|0;imult1[k]=product%BigInteger.base;imult1[k+1]=carry}for(i=0;i<length;i++){carry=0;k=i*2+1;for(var j=i+1;j<length;j++,k++){product=digits[j]*digits[i]*2+imult1[k]+carry;carry=(product/BigInteger.base)|0;imult1[k]=product%BigInteger.base}k=length+i;var digit=carry+imult1[k];carry=(digit/BigInteger.base)|0;imult1[k]=digit%BigInteger.base;imult1[k+1]+=carry}return new BigInteger(imult1,1)};BigInteger.prototype.quotient=function(n){return this.divRem(n)[0]};BigInteger.prototype.divide=BigInteger.prototype.quotient;BigInteger.prototype.remainder=function(n){return this.divRem(n)[1]};BigInteger.prototype.divRem=function(n){n=BigInteger(n);if(n._s===0){throw new Error("Divide by zero");}if(this._s===0){return[BigInteger.ZERO,BigInteger.ZERO]}if(n._d.length===1){return this.divRemSmall(n._s*n._d[0])}switch(this.compareAbs(n)){case 0:return[this._s===n._s?BigInteger.ONE:BigInteger.M_ONE,BigInteger.ZERO];case-1:return[BigInteger.ZERO,this]}var sign=this._s*n._s;var a=n.abs();var b_digits=this._d.slice();var digits=n._d.length;var max=b_digits.length;var quot=[];var guess;var part=new BigInteger([],1);part._s=1;while(b_digits.length){part._d.unshift(b_digits.pop());part=new BigInteger(part._d,1);if(part.compareAbs(n)<0){quot.push(0);continue}if(part._s===0){guess=0}else{var xlen=part._d.length,ylen=a._d.length;var highx=part._d[xlen-1]*BigInteger.base+part._d[xlen-2];var highy=a._d[ylen-1]*BigInteger.base+a._d[ylen-2];if(part._d.length>a._d.length){highx=(highx+1)*BigInteger.base}guess=Math.ceil(highx/highy)}do{var check=a.multiplySingleDigit(guess);if(check.compareAbs(part)<=0){break}guess--}while(guess);quot.push(guess);if(!guess){continue}var diff=part.subtract(check);part._d=diff._d.slice()}return[new BigInteger(quot.reverse(),sign),new BigInteger(part._d,this._s)]};BigInteger.prototype.divRemSmall=function(n){var r;n=+n;if(n===0){throw new Error("Divide by zero");}var n_s=n<0?-1:1;var sign=this._s*n_s;n=Math.abs(n);if(n<1||n>=BigInteger.base){throw new Error("Argument out of range");}if(this._s===0){return[BigInteger.ZERO,BigInteger.ZERO]}if(n===1||n===-1){return[(sign===1)?this.abs():new BigInteger(this._d,sign),BigInteger.ZERO]}if(this._d.length===1){var q=new BigInteger([(this._d[0]/n)|0],1);r=new BigInteger([(this._d[0]%n)|0],1);if(sign<0){q=q.negate()}if(this._s<0){r=r.negate()}return[q,r]}var digits=this._d.slice();var quot=new Array(digits.length);var part=0;var diff=0;var i=0;var guess;while(digits.length){part=part*BigInteger.base+digits[digits.length-1];if(part<n){quot[i++]=0;digits.pop();diff=BigInteger.base*diff+part;continue}if(part===0){guess=0}else{guess=(part/n)|0}var check=n*guess;diff=part-check;quot[i++]=guess;if(!guess){digits.pop();continue}digits.pop();part=diff}r=new BigInteger([diff],1);if(this._s<0){r=r.negate()}return[new BigInteger(quot.reverse(),sign),r]};BigInteger.prototype.isEven=function(){var digits=this._d;return this._s===0||digits.length===0||(digits[0]%2)===0};BigInteger.prototype.isOdd=function(){return!this.isEven()};BigInteger.prototype.sign=function(){return this._s};BigInteger.prototype.isPositive=function(){return this._s>0};BigInteger.prototype.isNegative=function(){return this._s<0};BigInteger.prototype.isZero=function(){return this._s===0};BigInteger.prototype.exp10=function(n){n=+n;if(n===0){return this}if(Math.abs(n)>Number(BigInteger.MAX_EXP)){throw new Error("exponent too large in BigInteger.exp10");}if(n>0){var k=new BigInteger(this._d.slice(),this._s);for(;n>=BigInteger.base_log10;n-=BigInteger.base_log10){k._d.unshift(0)}if(n==0)return k;k._s=1;k=k.multiplySingleDigit(Math.pow(10,n));return(this._s<0?k.negate():k)}else if(-n>=this._d.length*BigInteger.base_log10){return BigInteger.ZERO}else{var k=new BigInteger(this._d.slice(),this._s);for(n=-n;n>=BigInteger.base_log10;n-=BigInteger.base_log10){k._d.shift()}return(n==0)?k:k.divRemSmall(Math.pow(10,n))[0]}};BigInteger.prototype.pow=function(n){if(this.isUnit()){if(this._s>0){return this}else{return BigInteger(n).isOdd()?this:this.negate()}}n=BigInteger(n);if(n._s===0){return BigInteger.ONE}else if(n._s<0){if(this._s===0){throw new Error("Divide by zero");}else{return BigInteger.ZERO}}if(this._s===0){return BigInteger.ZERO}if(n.isUnit()){return this}if(n.compareAbs(BigInteger.MAX_EXP)>0){throw new Error("exponent too large in BigInteger.pow");}var x=this;var aux=BigInteger.ONE;var two=BigInteger.small[2];while(n.isPositive()){if(n.isOdd()){aux=aux.multiply(x);if(n.isUnit()){return aux}}x=x.square();n=n.quotient(two)}return aux};BigInteger.prototype.modPow=function(exponent,modulus){var result=BigInteger.ONE;var base=this;while(exponent.isPositive()){if(exponent.isOdd()){result=result.multiply(base).remainder(modulus)}exponent=exponent.quotient(BigInteger.small[2]);if(exponent.isPositive()){base=base.square().remainder(modulus)}}return result};BigInteger.prototype.log=function(){switch(this._s){case 0:return-Infinity;case-1:return NaN;default:}var l=this._d.length;if(l*BigInteger.base_log10<30){return Math.log(this.valueOf())}var N=Math.ceil(30/BigInteger.base_log10);var firstNdigits=this._d.slice(l-N);return Math.log((new BigInteger(firstNdigits,1)).valueOf())+(l-N)*Math.log(BigInteger.base)};BigInteger.prototype.valueOf=function(){return parseInt(this.toString(),10)};BigInteger.prototype.toJSValue=function(){return parseInt(this.toString(),10)};BigInteger.MAX_EXP=BigInteger(0x7FFFFFFF);(function(){function makeUnary(fn){return function(a){return fn.call(BigInteger(a))}}function makeBinary(fn){return function(a,b){return fn.call(BigInteger(a),BigInteger(b))}}function makeTrinary(fn){return function(a,b,c){return fn.call(BigInteger(a),BigInteger(b),BigInteger(c))}}(function(){var i,fn;var unary="toJSValue,isEven,isOdd,sign,isZero,isNegative,abs,isUnit,square,negate,isPositive,toString,next,prev,log".split(",");var binary="compare,remainder,divRem,subtract,add,quotient,divide,multiply,pow,compareAbs".split(",");var trinary=["modPow"];for(i=0;i<unary.length;i++){fn=unary[i];BigInteger[fn]=makeUnary(BigInteger.prototype[fn])}for(i=0;i<binary.length;i++){fn=binary[i];BigInteger[fn]=makeBinary(BigInteger.prototype[fn])}for(i=0;i<trinary.length;i++){fn=trinary[i];BigInteger[fn]=makeTrinary(BigInteger.prototype[fn])}BigInteger.exp10=function(x,n){return BigInteger(x).exp10(n)}})()})();if(typeof exports!=='undefined'){exports.BigInteger=BigInteger}
+
+/*  
+        End of JavaScript BigInteger library
+*/
 
 function getValueOfDigit(digit, alphabet)
 {
@@ -156,96 +43,94 @@ function getValueOfDigit(digit, alphabet)
    return pos;
 }
 
-function convert(src, srcAlphabet, dstAlphabet)
+/*
+        Convert a number (src:string) in base srcAlphabet to base dstAlphabet
+*/
+function convert(src, srcAlphabet, dstAlphabet) // : string
 {
    var srcBase = srcAlphabet.length;
    var dstBase = dstAlphabet.length;
-
    var wet     = src;
-//   var val     = new BigNumber(0, /*precision=*/src.length*srcAlphabet.length * dstAlphabet.length);
-//   var mlt     = new BigNumber(1, /*precision=*/src.length*srcAlphabet.length * dstAlphabet.length);
-   var val     = new BigNumber(0, /*precision=*/100);
-   var mlt     = new BigNumber(1, /*precision=*/100);
+   var val     = BigInteger(0);
+   var mlt     = BigInteger(1);
+   // add value of each digit until we have the whole number
    while (wet.length > 0)
    {
      var digit  = wet.charAt(wet.length - 1);
-	 //val       += mlt * getValueOfDigit(digit, srcAlphabet);
-	 val        = val.add(mlt.multiply(getValueOfDigit(digit, srcAlphabet)));
+         //val       += mlt * getValueOfDigit(digit, srcAlphabet);
+         val        = val.add(mlt.multiply(getValueOfDigit(digit, srcAlphabet)));
      wet        = wet.substring(0, wet.length - 1);
      //mlt       *= srcBase;
-	 mlt		= mlt.multiply(srcBase);
+         mlt            = mlt.multiply(srcBase);
    }
 
    wet          = val;
    var ret      = "";
 
+   // starting at the least significant digit, calculate that digit and remove equivalent value from wet
    while (wet.compare(dstBase)>=0)
    {
-	 // var digitVal = wet % dstBase
-     var digitVal = wet.mod(dstBase).asInteger();
+         // var digitVal = wet % dstBase
+     var digitVal = wet.remainder(dstBase).toJSValue();
      var digit    = dstAlphabet.charAt(digitVal);
      ret          = digit + ret;
-	 // wet        /= dstBase
-     wet		  = wet.divide(dstBase);
+         // wet        /= dstBase
+     wet                  = wet.divide(dstBase);
    }
-
-   var digit    = dstAlphabet.charAt(wet.asInteger());
+   // final iteration assignment
+   var digit    = dstAlphabet.charAt(wet.toJSValue());
    ret          = digit + ret;
    
    return ret;
 }
 
 function updateSecondFromFirst() {
-	document.f1.dstVal.value=convert(document.f1.srcVal.value, document.f1.srcBet.value, document.f1.dstBet.value);
+        document.f1.dstVal.value=convert(document.f1.srcVal.value, document.f1.srcBet.value, document.f1.dstBet.value);
 }
 
 function updateFirstFromSecond() {
-	document.f1.srcVal.value=convert(document.f1.dstVal.value, document.f1.dstBet.value, document.f1.srcBet.value); 	
+        document.f1.srcVal.value=convert(document.f1.dstVal.value, document.f1.dstBet.value, document.f1.srcBet.value);         
 }
-</script>
 
-<body>
-<div style="float:right; position:fixed; top:5; right:5;"><a href="esoterica.html">up</a></div>
-<center><table><td>
-<span style="font-size:200%">
-arbitrary base conversion in javascript
-</span><br>
-Shamelessly based on <a href="http://elenzil.com/esoterica/baseConversion.html">DocOcelot's converter</a> and <a href="http://jsfromhell.com/classes/bignumber">jsfromhell's BigNumber library</a>. 
-<br>
-<span style="font-size:80%">
-<br>
-<b>what to do</b>: enter all the 'digits' of the bases you want to convert between in the "base/alphabet" fields,<br>
-then enter a value you want to convert in one of the "value" fields,<br>
-then click the appropriate "click!" button to convert it to the other base.<br>
-<br>
-note, this works for arbitrary bases and arbitrary-length values.
-</span>
-<br>
-<form name=f1>
-<table cellspacing=0 cellpadding=0>
-  <tr><td>value</td><td>base / alphabet</td><td><b>click!</b></td></tr>
-  <tr>
-    <td><input type=text name="srcVal" size=50 value="195948557" ></input></td>
-    <td><input type=text name="srcBet" size=80 value="0123456789" ></input></td>
-    <td><button style="width:100%" onClick="updateSecondFromFirst(); return false;">v</button></td>
-  </tr>
-  <tr>
-	<td><input type=text name="dstVal" size=50 value="" ></input></td>
-    <td><input type=text name="dstBet" size=80 value="0123456789ABCDEF" ></input></td>
-    <td><button style="width:100%" onClick="updateFirstFromSecond(); return false;">^</button></td>
-  </tr>
+//]]>
+</script>
+<div class="c5"><span class="c1">arbitrary base conversion in javascript</span><br />
+Shamelessly based on <a href="http://elenzil.com/esoterica/baseConversion.html">DocOcelot's converter</a> and powered by the excellent <a href="https://github.com/jtobey/javascript-bignum/">javascript-bignum</a>.<br />
+<span class="c2"><br />
+<strong>what to do</strong>: enter all the 'digits' of the bases you want to convert between in the "base/alphabet" fields,<br />
+then enter a value you want to convert in one of the "value" fields,<br />
+then click the appropriate "click!" button to convert it to the other base.<br />
+<br />
+note, this works for arbitrary bases and arbitrary-length values.</span><br />
+<form name="f1" class="c4" id="f1" action="">
+<table cellspacing="0" cellpadding="0">
+<tr>
+<td>value</td>
+<td>base / alphabet</td>
+<td><strong>click!</strong></td>
+</tr>
+<tr>
+<td><input type="text" name="srcVal" size="50" value="195948557" onkeyup="updateSecondFromFirst();" /></td>
+<td><input type="text" name="srcBet" size="80" value="0123456789" /></td>
+<td><button class="c3" onclick="updateSecondFromFirst(); return false;">v</button></td>
+</tr>
+<tr>
+<td><input type="text" name="dstVal" size="50" value="" /></td>
+<td><input type="text" name="dstBet" size="80" value="0123456789ABCDEF" /></td>
+<td><button class="c3" onclick="updateFirstFromSecond(); return false;">^</button></td>
+</tr>
 </table>
-<br>
-<br>
-some base alphabets of interest<br>
-<input type=text size=120 value="01"  > binary<br>
-<input type=text size=120 value="0123"> base 4<br>
-<input type=text size=120 value="01234567"> octal<br>
-<input type=text size=120 value="0123456789"> decimal<br>
-<input type=text size=120 value="0123456789ABCDEF"> hexadecimal<br>
-<input type=text size=120 value="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"> base 36 (alphanumeric without case)<br>
-<input type=text size=120 value="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"> base 62 (alphanumeric with case)<br>
-<input type=text size=120 value="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_.,!+=-#*(){}[]"> base 77 (url-safe, i think)<br>
+<p><br />
+some base alphabets of interest<br />
+<input type="text" size="120" value="01" />binary<br />
+<input type="text" size="120" value="01234567" />octal<br />
+<input type="text" size="120" value="0123456789" />decimal<br />
+<input type="text" size="120" value="0123456789ABCDEF" />hexadecimal<br />
+<input type="text" size="120" value="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" />base 36 (alphanumeric without case)<br />
+<input type="text" size="120" value="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" />base 62 (alphanumeric with case)<br />
+</p>
 </form>
-<br>
-</td></table></center></body></html>
+<br />
+</div>
+</body>
+</html>
