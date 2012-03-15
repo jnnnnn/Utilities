@@ -18,5 +18,3 @@ with open("clues.csv") as f:
             with open(line[1]+".html", 'w') as fw:
                 fw.write(contents)
                 print("wrote "+line[1]+".html")
-                
-        

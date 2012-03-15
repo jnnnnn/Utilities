@@ -2,7 +2,7 @@
   <head>
     <title>Treasure Hunt $Number$. $Title$</title>
     <!-- 
-	Kristi, if you're reading this then you're probably a naughty cheater! 
+	If you're reading this then you're probably a naughty cheater! 
 	No respect!
 	Anyway, reading the code below won't help you find the clue... 
 	the answer has been encoded with a one-time pad! 
@@ -12,8 +12,8 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
     <script type="text/javascript">
-		var encodedClue = encode("$Clue$", "$Answer$")"; 
-		var encodedClueChecksum = "";
+		var encodedClue = encode("$Clue$", "$Answer$")[0]; 
+		var encodedClueChecksum = encode("$Clue$", "$Answer$")[1];
 		var resultLinkAnchor = "%s";
 	</script>
     <script type="text/javascript" src="./treasurehunt.js">
