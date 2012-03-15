@@ -18,7 +18,7 @@ A decent collection of error messages is included for wrong answers.
 
 == baseconv ==
 
-A single html page that allows the user to convert between any (positive) base with arbitrary precision and pretty good performance.
+A single html page (with inline javascript) that allows the user to convert a positive integer between any (positive) bases with arbitrary precision and pretty good performance.
 
 == wordmaker trigram ==
 
