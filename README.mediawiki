@@ -12,7 +12,7 @@ A treasure hunt of this style goes like this:
 # The user finds a clue somewhere in the real world, with a link.
 # The link takes them to the first html page of the hunt, that has a riddle on it!
 #* They solve the riddle, type in the answer, and get a clue for an object in the real world
-# They go find the next real-world item, with comes with another link...
+# They go looking for the next real-world item, which comes with another link...
 
 A decent collection of error messages is included for wrong answers.
 
