@@ -7,11 +7,34 @@
 
 <style type="text/css">
 /*<![CDATA[*/
- div.c5 {margin:auto}
- form.c4 {margin:auto}
- button.c3 {width:100%}
- span.c2 {font-size:80%}
- span.c1 {font-size:200%}
+#content, body {
+	margin: auto;
+	width:850px; 
+	padding-top: 10px;
+	padding-bottom: 10px;
+}		
+body {
+	padding-left: 50px;
+	padding-right: 50px;			
+	box-shadow: 0px 0px 10px grey;			
+}
+h1, h2 { 
+	font-family: arial, sans-serif;
+	color: #004; 			
+}
+h1 { 
+	font-size: 1.8em;			
+	margin-bottom: 1em;
+	border-bottom: 1px solid grey;
+	padding: 0.5em;
+}
+h2 { font-size: 1.5em; }
+p {
+	font-size: 1em;
+}
+.c3 {
+	width: 3em;
+}
 /*]]>*/
 </style>
 </head>
@@ -92,17 +115,21 @@ function updateFirstFromSecond() {
         document.f1.srcVal.value=convert(document.f1.dstVal.value, document.f1.dstBet.value, document.f1.srcBet.value);         
 }
 
+function onAlternateBaseClick(self) {
+		document.f1.dstBet.value = self.value;
+}
 //]]>
 </script>
-<div class="c5"><span class="c1">arbitrary base conversion in javascript</span><br />
+<div id="content"><h1>arbitrary base conversion in javascript</h1>
 Shamelessly based on <a href="http://elenzil.com/esoterica/baseConversion.html">DocOcelot's converter</a> and powered by the excellent <a href="https://github.com/jtobey/javascript-bignum/">javascript-bignum</a>.<br />
-<span class="c2"><br />
-<strong>what to do</strong>: enter all the 'digits' of the bases you want to convert between in the "base/alphabet" fields,<br />
-then enter a value you want to convert in one of the "value" fields,<br />
-then click the appropriate "click!" button to convert it to the other base.<br />
-<br />
-note, this works for arbitrary bases and arbitrary-length values.</span><br />
-<form name="f1" class="c4" id="f1" action="">
+<p>
+<strong>what to do</strong>: enter all the 'digits' of the bases you want to convert between in the "base/alphabet" fields,
+then enter a value you want to convert in one of the "value" fields,
+then click the appropriate "click!" button to convert it to the other base.
+</p><p>
+note, this works for arbitrary bases and arbitrary-length values.
+</p>
+<form name="f1" id="f1" action="">
 <table cellspacing="0" cellpadding="0">
 <tr>
 <td>value</td>
@@ -110,27 +137,27 @@ note, this works for arbitrary bases and arbitrary-length values.</span><br />
 <td><strong>click!</strong></td>
 </tr>
 <tr>
-<td><input type="text" name="srcVal" size="50" value="195948557" onkeyup="updateSecondFromFirst();" /></td>
+<td><input type="text" name="srcVal" size="40" value="195948557" onkeyup="updateSecondFromFirst();" /></td>
 <td><input type="text" name="srcBet" size="80" value="0123456789" /></td>
 <td><button class="c3" onclick="updateSecondFromFirst(); return false;">v</button></td>
 </tr>
 <tr>
-<td><input type="text" name="dstVal" size="50" value="" /></td>
+<td><input type="text" name="dstVal" size="40" value="" onkeyup="updateFirstFromSecond();"/></td>
 <td><input type="text" name="dstBet" size="80" value="0123456789ABCDEF" /></td>
 <td><button class="c3" onclick="updateFirstFromSecond(); return false;">^</button></td>
 </tr>
 </table>
-<p><br />
-some base alphabets of interest<br />
-<input type="text" size="120" value="01" />binary<br />
-<input type="text" size="120" value="01234567" />octal<br />
-<input type="text" size="120" value="0123456789" />decimal<br />
-<input type="text" size="120" value="0123456789ABCDEF" />hexadecimal<br />
-<input type="text" size="120" value="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" />base 36 (alphanumeric without case)<br />
-<input type="text" size="120" value="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" />base 62 (alphanumeric with case)<br />
+<h2>
+some base alphabets of interest
+</h2><p>
+<input type="text" size="80" onclick="onAlternateBaseClick(this)" value="01"/>binary<br />
+<input type="text" size="80" onclick="onAlternateBaseClick(this)" value="01234567" />octal<br />
+<input type="text" size="80" onclick="onAlternateBaseClick(this)" value="0123456789" />decimal<br />
+<input type="text" size="80" onclick="onAlternateBaseClick(this)" value="0123456789ABCDEF" />hexadecimal<br />
+<input type="text" size="80" onclick="onAlternateBaseClick(this)" value="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" />base 36 (alphanumeric without case)<br />
+<input type="text" size="80" onclick="onAlternateBaseClick(this)" value="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" />base 62 (alphanumeric with case)<br />
 </p>
 </form>
-<br />
 </div>
 </body>
 </html>
