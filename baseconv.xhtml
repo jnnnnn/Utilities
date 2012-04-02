@@ -98,11 +98,11 @@ function convert(src, srcAlphabet, dstAlphabet) // : string
    // starting at the least significant digit, calculate that digit and remove equivalent value from wet
    while (wet.compare(dstBase)>=0)
    {
-         // var digitVal = wet % dstBase
+     // var digitVal = wet % dstBase
      var digitVal = wet.remainder(dstBase).toJSValue();
      var digit    = dstAlphabet.charAt(digitVal);
      ret          = digit + ret;
-         // wet        /= dstBase
+     // wet        /= dstBase
      wet                  = wet.divide(dstBase);
    }
    // final iteration assignment
@@ -113,24 +113,25 @@ function convert(src, srcAlphabet, dstAlphabet) // : string
 }
 
 function updateSecondFromFirst() {
-		var f1 = document.getElementById("f1");
-		var val = convert(f1.srcVal.value, f1.srcBet.value, f1.dstBet.value);
-        f1.dstVal.value = val;
-		
-		// display values with spacing for easier inspection
-		var spaces_every = 4;
-		for (var i = val.length - spaces_every; i > 0; i-=spaces_every)	{ 
-			val = val.slice(0, i) + " " + val.slice(i);
-		}
-		document.getElementById("spaced").innerHTML = val
+	var f1 = document.getElementById("f1");
+	var val = convert(f1.srcVal.value, f1.srcBet.value, f1.dstBet.value);
+	f1.dstVal.value = val;
+	
+	// display values with spacing for easier inspection
+	var spaces_every = 4;
+	for (var i = val.length - spaces_every; i > 0; i-=spaces_every)	{ 
+		val = val.slice(0, i) + " " + val.slice(i);
+	}
+	document.getElementById("spaced").innerHTML = val
 }
 
 function updateFirstFromSecond() {
-        document.f1.srcVal.value=convert(document.f1.dstVal.value, document.f1.dstBet.value, document.f1.srcBet.value);         
+	var f1 = document.getElementById("f1");
+    f1.srcVal.value=convert(f1.dstVal.value, f1.dstBet.value, f1.srcBet.value);         
 }
 
 function onAlternateBaseClick(self) {
-		document.f1.dstBet.value = self.value;
+	document.getElementById("f1").dstBet.value = self.value;
 }
 //]]>
 </script>
