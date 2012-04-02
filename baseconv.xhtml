@@ -32,8 +32,13 @@ h2 { font-size: 1.5em; }
 p {
 	font-size: 1em;
 }
-.c3 {
+.clicker {
 	width: 3em;
+}
+#spaced {
+	min-height: 4em;
+	font-family: consolas, monospace;
+	font-size: 2em;
 }
 /*]]>*/
 </style>
@@ -108,7 +113,16 @@ function convert(src, srcAlphabet, dstAlphabet) // : string
 }
 
 function updateSecondFromFirst() {
-        document.f1.dstVal.value=convert(document.f1.srcVal.value, document.f1.srcBet.value, document.f1.dstBet.value);
+		var f1 = document.getElementById("f1");
+		var val = convert(f1.srcVal.value, f1.srcBet.value, f1.dstBet.value);
+        f1.dstVal.value = val;
+		
+		// display values with spacing for easier inspection
+		var spaces_every = 4;
+		for (var i = val.length - spaces_every; i > 0; i-=spaces_every)	{ 
+			val = val.slice(0, i) + " " + val.slice(i);
+		}
+		document.getElementById("spaced").innerHTML = val
 }
 
 function updateFirstFromSecond() {
@@ -126,8 +140,6 @@ Shamelessly based on <a href="http://elenzil.com/esoterica/baseConversion.html">
 <strong>what to do</strong>: enter all the 'digits' of the bases you want to convert between in the "base/alphabet" fields,
 then enter a value you want to convert in one of the "value" fields,
 then click the appropriate "click!" button to convert it to the other base.
-</p><p>
-note, this works for arbitrary bases and arbitrary-length values.
 </p>
 <form name="f1" id="f1" action="">
 <table cellspacing="0" cellpadding="0">
@@ -139,14 +151,16 @@ note, this works for arbitrary bases and arbitrary-length values.
 <tr>
 <td><input type="text" name="srcVal" size="40" value="195948557" onkeyup="updateSecondFromFirst();" /></td>
 <td><input type="text" name="srcBet" size="80" value="0123456789" /></td>
-<td><button class="c3" onclick="updateSecondFromFirst(); return false;">v</button></td>
+<td><button class="clicker" onclick="updateSecondFromFirst(); return false;">v</button></td>
 </tr>
 <tr>
 <td><input type="text" name="dstVal" size="40" value="" onkeyup="updateFirstFromSecond();"/></td>
 <td><input type="text" name="dstBet" size="80" value="0123456789ABCDEF" /></td>
-<td><button class="c3" onclick="updateFirstFromSecond(); return false;">^</button></td>
+<td><button class="clicker" onclick="updateFirstFromSecond(); return false;">^</button></td>
 </tr>
 </table>
+<p id="spaced">
+</p>
 <h2>
 some base alphabets of interest
 </h2><p>
